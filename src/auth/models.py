@@ -14,6 +14,7 @@ from src.database import Base
 class User(Base):
     __tablename__ = "users"
 
+    email = mapped_column(String, unique=True, nullable=False)
     username = mapped_column(String, unique=True, nullable=False)
     password = mapped_column(LargeBinary, nullable=False)
     is_admin = mapped_column(Boolean, default=False, server_default="false", nullable=False)

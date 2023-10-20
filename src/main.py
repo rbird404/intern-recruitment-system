@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src import redis
 from src.auth.router import router as auth_router
+from src.questions.router import router as question_router
 from src.config import app_configs, settings
 
 
@@ -26,7 +27,7 @@ async def lifespan(_application: FastAPI) -> AsyncGenerator:
     # Shutdown
     await pool.disconnect()
 
-app = FastAPI(**app_configs, lifespan=lifespan)
+app = FastAPI(**app_configs)
 
 app.add_middleware(
     CORSMiddleware,
@@ -44,3 +45,4 @@ async def healthcheck() -> dict[str, str]:
 
 
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(question_router, prefix="/questions", tags=["Questions"])

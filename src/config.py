@@ -7,10 +7,10 @@ from src.constants import Environment
 
 class Config(BaseSettings):
     DATABASE_URL: PostgresDsn
-    REDIS_URL: RedisDsn
+    # REDIS_URL: RedisDsn
 
-    CELERY_BROKER_URL: RedisDsn
-    CELERY_RESULT_BACKEND: RedisDsn
+    # CELERY_BROKER_URL: RedisDsn
+    # CELERY_RESULT_BACKEND: RedisDsn
 
     SITE_DOMAIN: str = "myapp.com"
 
