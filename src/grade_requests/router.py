@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, UploadFile
 
 from src.auth import service
@@ -5,7 +7,8 @@ from src.auth.service import CurrentUser
 from src.database import AsyncDbSession
 
 from src.grade_requests import service
-from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead, GradeRequestCreate
+from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead, GradeRequestCreate, \
+    GradeRequestReadFull
 
 router = APIRouter()
 
@@ -39,3 +42,8 @@ async def change_status_grade_request(session: AsyncDbSession, id: int, status: 
 @router.post("/load")
 async def load_file(file_in: UploadFile):
     return await service.load_file(file_in)
+
+
+@router.get("", response_model=List[GradeRequestReadFull])
+async def get_grades(session: AsyncDbSession):
+    return await service.get_grade_requests(session)

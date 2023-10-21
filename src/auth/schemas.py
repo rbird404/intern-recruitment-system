@@ -8,6 +8,7 @@ class AuthUser(BaseModel):
 
 
 class UserCreate(AuthUser):
+    email: str
     model_config = ConfigDict(from_attributes=True)
 
 

@@ -53,6 +53,13 @@ async def change_status(session: AsyncDbSession, grade_request_id, status: Grade
     return request
 
 
+async def get_grade_requests(session: AsyncDbSession):
+    requests = await session.scalars(
+        select(GradeRequest)
+    )
+    return requests
+
+
 async def load_file(file_in) -> str:
     chunk_size = 1024 * 1024 * 50
     async with aiofiles.open(

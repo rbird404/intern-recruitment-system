@@ -11,17 +11,19 @@ from src.auth.models import User
 from src.database import Base
 from src.grade_requests.utils import GradeRequestType, GradeUserType
 from src.grades.models import Test
+from src.specializations.models import Specialization
 
 
 class GradeRequest(Base):
     __tablename__ = "grade_requests"
     user_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    specialization_id = mapped_column(Integer, ForeignKey("specializations.id",ondelete="SET NULL"), nullable=True)
+    specialization_id = mapped_column(Integer, ForeignKey("specializations.id", ondelete="SET NULL"), nullable=True)
     status = mapped_column(Enum(GradeRequestType), default=GradeRequestType.entering)
     type = mapped_column(Enum(GradeUserType), default=GradeUserType.intern)
     resume = mapped_column(String, nullable=True)
     tests: Mapped[List[Test]] = relationship(lazy='selectin', secondary="grade_request_tests")
     user: Mapped[User] = relationship(lazy='selectin')
+    specialization: Mapped[Specialization] = relationship(lazy="selectin")
 
 
 class GradeRequestTests(Base):
