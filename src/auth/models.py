@@ -23,6 +23,7 @@ class User(Base):
     role = mapped_column(Enum(UserRoleType), default=UserRoleType.candidate)
     email = mapped_column(String, unique=True, nullable=False)
     telegram_id = mapped_column(String, nullable=True)
+    chat_id = mapped_column(String, nullable=True)
     username = mapped_column(String, unique=True, nullable=False)
     password = mapped_column(LargeBinary, nullable=False)
     is_admin = mapped_column(Boolean, default=False, server_default="false", nullable=False)
