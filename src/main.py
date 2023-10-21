@@ -10,6 +10,7 @@ from src.auth.router import router as auth_router
 from src.questions.router import router as question_router
 from src.grades.router import router as grade_router
 from src.answers.router import router as answer_router
+from src.grade_requests.router import router as grades_request_router
 from src.config import app_configs, settings
 
 
@@ -50,3 +51,4 @@ app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(question_router, prefix="/questions", tags=["Questions"])
 app.include_router(grade_router, prefix="/tests", tags=["Test"])
 app.include_router(answer_router, prefix="/answers", tags=["Answers"])
+app.include_router(grades_request_router, prefix="/grade-requests", tags=["Grade Requests"])

@@ -1,3 +1,5 @@
+from os import getenv
+from pathlib import Path
 from typing import Any
 from pydantic import PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings
@@ -33,3 +35,5 @@ if settings.ENVIRONMENT.is_deployed:
 
 if not settings.ENVIRONMENT.is_debug:
     app_configs["openapi_url"] = None  # hide docs
+
+STATIC_DIR = Path(getenv("STATIC_DIR", default="static"))

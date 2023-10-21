@@ -23,7 +23,6 @@ async def create_answer(
 @router.get("", response_model=List[AnswerRead])
 async def get_answers(session: AsyncDbSession):
     answer = await service.get_answers(session)
-    await session.commit()
     return answer
 
 
