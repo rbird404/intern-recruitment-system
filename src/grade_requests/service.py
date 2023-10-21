@@ -8,21 +8,18 @@ from src.config import STATIC_DIR
 from src.database import AsyncDbSession
 from src.grades.models import Test
 from .models import GradeRequest, GradeRequestTests
-from .schemas import GradeRequestStatusUpdate
+from .schemas import GradeRequestStatusUpdate, GradeRequestCreate
 
 
-async def create_user_grade_request(session: AsyncDbSession, user_id, file_in: UploadFile = None):
-    chunk_size = 1024 * 1024 * 50
-    resume = None
-    if file_in is not None:
-        async with aiofiles.open(
-                str(STATIC_DIR / f"{uuid.uuid4()}.pdf"),
-                "wb"
-        ) as file:
-            while chunk := await file_in.read(chunk_size):
-                await file.write(chunk)
-        resume = file.name
-    request = GradeRequest(user_id=user_id, resume=resume)
+async def create_user_grade_request(
+        session: AsyncDbSession,
+        user_id: int,
+        grade_request_in: GradeRequestCreate,
+):
+    request = GradeRequest(
+        user_id=user_id,
+        **grade_request_in.model_dump()
+    )
     session.add(request)
     await session.flush()
     await session.refresh(request)
@@ -54,3 +51,14 @@ async def change_status(session: AsyncDbSession, grade_request_id, status: Grade
         .returning(GradeRequest)
     )
     return request
+
+
+async def load_file(file_in) -> str:
+    chunk_size = 1024 * 1024 * 50
+    async with aiofiles.open(
+            str(STATIC_DIR / f"{uuid.uuid4()}.pdf"),
+            "wb"
+    ) as file:
+        while chunk := await file_in.read(chunk_size):
+            await file.write(chunk)
+    return file.name

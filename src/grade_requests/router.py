@@ -5,14 +5,19 @@ from src.auth.service import CurrentUser
 from src.database import AsyncDbSession
 
 from src.grade_requests import service
-from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead
+from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead, GradeRequestCreate
 
 router = APIRouter()
 
 
 @router.post("", status_code=200, response_model=GradeRequestRead)
-async def user_create_grade_request(session: AsyncDbSession, user: CurrentUser, file_in: UploadFile = None):
-    request = await service.create_user_grade_request(session, user.id, file_in)
+async def user_create_grade_request(
+        session: AsyncDbSession,
+        user: CurrentUser,
+        grade_request_in: GradeRequestCreate
+
+):
+    request = await service.create_user_grade_request(session, user.id, grade_request_in)
     await session.commit()
     return request
 
@@ -29,3 +34,8 @@ async def change_status_grade_request(session: AsyncDbSession, id: int, status: 
     request = await service.change_status(session, id, status)
     await session.commit()
     return request
+
+
+@router.post("/load")
+async def load_file(file_in: UploadFile):
+    return await service.load_file(file_in)

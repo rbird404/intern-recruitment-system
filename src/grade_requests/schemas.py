@@ -1,6 +1,12 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
-from src.grade_requests.utils import GradeRequestType
+from src.grade_requests.utils import GradeRequestType, GradeUserType
+
+
+class GradeRequestCreate(BaseModel):
+    specialization_id: int
+    type: GradeUserType
+    resume: str | None
 
 
 class GradeRequestStatusUpdate(BaseModel):
@@ -26,6 +32,8 @@ class GradeRequestRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     resume: str | None
+    specialization_id: int
+    type: GradeUserType
     status: GradeRequestType
     tests: list[TestRead] = []
     user: UserRead
