@@ -23,7 +23,7 @@ async def run_test_case(test_case: TestCase, language: str, code: str):
             json={
                 "language": language,
                 "code": code,
-                # "input": test_case.input
+                "input": test_case.input
             },
             timeout=100
         )
