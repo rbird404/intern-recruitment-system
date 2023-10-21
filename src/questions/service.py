@@ -1,5 +1,3 @@
-import logging
-
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.questions.models import Text, TestCase, Code, Question
@@ -68,13 +66,3 @@ async def get_questions(session: AsyncSession):
         select(Question)
     )
     return questions
-
-
-def serialize_question(question: Question) -> dict:
-    data = dict(question.__dict__)
-    logging.warning(data)
-    if code := data.get("code"):
-        data["content"] = code
-    elif text := data.get("text"):
-        data["content"] = text
-    return data

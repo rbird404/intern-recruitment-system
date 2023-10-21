@@ -53,4 +53,4 @@ class QuestionRead(BaseModel):
     description: str | None = None
     level: int
     type: QuestionType
-    content: CodeRead | TextRead
+    content: CodeRead | TextRead | None

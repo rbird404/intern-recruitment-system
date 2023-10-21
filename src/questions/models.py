@@ -1,3 +1,4 @@
+from typing import Any
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import (
     String,
@@ -39,3 +40,10 @@ class Question(Base):
     type = mapped_column(Enum(QuestionType), nullable=False)
     code = relationship(Code, lazy='selectin', uselist=False)
     text = relationship(Text, lazy='selectin', uselist=False)
+
+    @property
+    def content(self) -> Any:
+        if self.code:
+            return self.code
+        if self.text:
+            return self.text
