@@ -9,6 +9,7 @@ from src import redis
 from src.auth.router import router as auth_router
 from src.questions.router import router as question_router
 from src.config import app_configs, settings
+from src.answers.router import router as answer_router
 
 
 @asynccontextmanager
@@ -46,3 +47,4 @@ async def healthcheck() -> dict[str, str]:
 
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(question_router, prefix="/questions", tags=["Questions"])
+app.include_router(answer_router, prefix="/answer", tags=["Answer"])

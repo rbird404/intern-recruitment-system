@@ -11,10 +11,10 @@ from src.database import Base
 import enum
 
 
-from src.grades import QuestionType
+from src.questions.utils import QuestionType
 
 
-class Ansswer(Base):
+class Answer(Base):
     __tablename__ = "answers"
     
     user_id = mapped_column(Integer, ForeignKey("users.id"))
