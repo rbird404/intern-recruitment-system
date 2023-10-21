@@ -37,3 +37,4 @@ if not settings.ENVIRONMENT.is_debug:
     app_configs["openapi_url"] = None  # hide docs
 
 STATIC_DIR = Path(getenv("STATIC_DIR", default="static"))
+CODE_EXECUTOR_URL = getenv("CODE_EXECUTOR_URL")
