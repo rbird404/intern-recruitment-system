@@ -13,5 +13,5 @@ class CodeExecutorResult(BaseModel):
 
 
 class CodeUserResult(CodeExecutorResult):
-    status: int
+    status: int = 2
 

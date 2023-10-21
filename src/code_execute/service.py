@@ -30,9 +30,9 @@ async def run_test_case(test_case: TestCase, language: str, code: str):
         if response.status_code == 200:
             result = CodeExecutorResult(**response.json())
             if test_case.output == result.output:
-                result = CodeUserResult(**result.model_dump(), success=1)
+                result = CodeUserResult(**result.model_dump(), status=1)
             else:
-                result = CodeUserResult(**result.model_dump(), success=0)
+                result = CodeUserResult(**result.model_dump(), status=0)
             return result
 
-        return CodeUserResult(success=2, time=1.0)
+        return CodeUserResult(status=2, time=1.0)
