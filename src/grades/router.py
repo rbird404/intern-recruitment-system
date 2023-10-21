@@ -1,31 +1,42 @@
-from fastapi import APIRouter, Depends, status
+from typing import List
 
-from src.auth import service, tokens
-from src.auth.dependencies import valid_user_create, valid_refresh_token, valid_access_token
-from src.auth.exceptions import InvalidToken
-from src.auth.schemas import UserRead, UserCreate, TokenPair, AuthUser, RefreshToken
-from src.auth.service import CurrentUser
+from fastapi import APIRouter
+
+from src.auth import service
 from src.database import AsyncDbSession
-
-router = APIRouter(
-    prefix="questions"
-)
-
-
-@router.post("")
-def create_question():
-    pass
+from src.grades import service
+from src.grades.schemas import TestCreate, TestRead
+from src.exceptions import BadRequest
 
 
-@router.get("")
-def create_question():
-    pass
+router = APIRouter()
 
-@router.put("")
-def update_question():
-    pass
 
-@router.delete("")
-def delete_question():
-    pass
+@router.post("", response_model=TestRead)
+async def create_test(session: AsyncDbSession, test_in: TestCreate):
+    test = await service.create_test(session, test_in)
+    await session.commit()
+    return test
+
+
+@router.get("/{id}", response_model=TestRead)
+async def get_test(session: AsyncDbSession, id: int):
+    test = await service.get_test(session, id)
+    if test is None:
+        raise BadRequest
+    return test
+
+
+@router.get("", response_model=List[TestRead])
+async def get_tests(session: AsyncDbSession):
+    return await service.get_tests(session)
+
+
+@router.delete("/{id}")
+async def delete_test(session: AsyncDbSession, id: int):
+    test = await service.delete_test(session, id)
+    if test is None:
+        raise BadRequest
+    await session.commit()
+    return test
 

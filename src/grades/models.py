@@ -1,18 +1,22 @@
-from sqlalchemy.orm import mapped_column
+from typing import List
+
+from sqlalchemy.orm import mapped_column, relationship, Mapped
 from sqlalchemy import (
     String,
     ForeignKey,
-    Enum,
     Integer
 )
 
 from src.database import Base
-import enum
+from src.questions.models import Question
 
 
-class QuestionType(enum.Enum):
-    text = "text"
-    code = "code"
+class TestQuestion(Base):
+    __tablename__ = "test_questions"
+    test_id = mapped_column(Integer, ForeignKey("tests.id", ondelete="CASCADE"), primary_key=True)
+    question_id = mapped_column(Integer, ForeignKey("questions.id", ondelete="CASCADE"), primary_key=True)
+    point = mapped_column(Integer, nullable=False)
+    question: Mapped[Question] = relationship(lazy="selectin")
 
 
 class Test(Base):
@@ -20,11 +24,5 @@ class Test(Base):
 
     title = mapped_column(String, nullable=False)
     description = mapped_column(String)
-    type = mapped_column(Enum(QuestionType), nullable=False)
     creator_id = mapped_column(Integer, ForeignKey("users.id"))
-
-
-class TestQuestion(Base):
-    __tablename__ = "test_questions"
-    test_id = mapped_column(Integer, ForeignKey("tests.id"))
-    question_id = mapped_column(Integer, ForeignKey("questions.id"))
+    questions: Mapped[List[TestQuestion]] = relationship(lazy="selectin")
