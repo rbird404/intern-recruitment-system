@@ -12,6 +12,7 @@ from src.database import AsyncDbSession
 from src.answers import service
 from src.answers.schemas import AnswerCreate, AnswerRead
 from src.auth import service as auth_service
+from src.exceptions import BadRequest
 
 router = APIRouter()
 
@@ -23,17 +24,24 @@ async def create_answer(session: AsyncDbSession, answer_in: AnswerCreate, user: 
 
 
 @router.get("", response_model=List[AnswerRead])
-def get_answer(session: AsyncDbSession):
-    answer = await service.create_answer(session)
+async def get_answers(session: AsyncDbSession):
+    answer = await service.get_answers(session)
     await session.commit()
     return answer
 
 
-@router.put("")
-def update_answer():
-    pass
+@router.get("/{id}")
+async def get_answer(session: AsyncDbSession, id: int):
+    answer = await service.get_answer(session, id)
+    if answer is None:
+        raise BadRequest
+    return answer
 
 
-@router.delete("")
-def delete_answer():
-    pass
+@router.delete("/{id}")
+async def delete_answer(session: AsyncDbSession, id: int):
+    answer = await service.remove_answer(session, id)
+    if answer is None:
+        raise BadRequest
+    await session.commit()
+    return answer
