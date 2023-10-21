@@ -1,5 +1,5 @@
 version: '3.7'
-name: my-microservices
+name: hackathon
 services:
   app:
     restart: always
