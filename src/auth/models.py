@@ -5,15 +5,22 @@ from sqlalchemy import (
     LargeBinary,
     UUID,
     DateTime,
-    ForeignKey
+    ForeignKey,
+    Enum
 )
 
+from src.auth.utils import UserRoleType
 from src.database import Base
 
 
 class User(Base):
     __tablename__ = "users"
 
+    # TODO добавить фото
+    source = mapped_column(String)
+    first_name = mapped_column(String)
+    last_name = mapped_column(String)
+    role = mapped_column(Enum(UserRoleType), default=UserRoleType.candidate)
     email = mapped_column(String, unique=True, nullable=False)
     username = mapped_column(String, unique=True, nullable=False)
     password = mapped_column(LargeBinary, nullable=False)

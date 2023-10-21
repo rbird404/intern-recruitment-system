@@ -3,12 +3,14 @@ import uuid
 import aiofiles
 from fastapi import UploadFile
 from sqlalchemy import delete, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import STATIC_DIR
 from src.database import AsyncDbSession
 from src.grades.models import Test
 from .models import GradeRequest, GradeRequestTests
 from .schemas import GradeRequestStatusUpdate, GradeRequestCreate
+from ..exceptions import BadRequest
 
 
 async def create_user_grade_request(
@@ -69,3 +71,18 @@ async def load_file(file_in) -> str:
         while chunk := await file_in.read(chunk_size):
             await file.write(chunk)
     return file.name
+
+
+async def add_user(session: AsyncSession, request_id: int, user_id: int, role: str):
+    data = dict()
+    if role == "tech_lead":
+        data["tech_lead_id"] = user_id
+    else:
+        data["hr_id"] = user_id
+
+    request = await session.scalar(
+        update(GradeRequest)
+        .values(**data).where(GradeRequest.id == request_id)
+        .returning(GradeRequest)
+    )
+    return request

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from src.auth.utils import UserRoleType
 from src.grade_requests.utils import GradeRequestType, GradeUserType
 from src.specializations.schemas import SpecializationRead
 
@@ -27,6 +28,9 @@ class TestRead(BaseModel):
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    first_name: str | None
+    last_name: str | None
+    role: UserRoleType
 
 
 class GradeRequestRead(BaseModel):
@@ -49,3 +53,5 @@ class GradeRequestReadFull(BaseModel):
     status: GradeRequestType
     tests: list[TestRead] = []
     user: UserRead
+    tech_lead: UserRead | None
+    hr: UserRead | None
