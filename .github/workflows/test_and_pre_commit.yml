@@ -21,6 +21,7 @@ jobs:
         pip install poetry
         poetry install
         pip install pytest-asyncio
+        pip install async-asgi-testclient
     - name: Analysing the code with pre-commit and run tests
       run: |
         pre-commit install
