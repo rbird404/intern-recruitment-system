@@ -38,3 +38,5 @@ if not settings.ENVIRONMENT.is_debug:
 
 STATIC_DIR = Path(getenv("STATIC_DIR", default="static"))
 CODE_EXECUTOR_URL = getenv("CODE_EXECUTOR_URL")
+
+BOT_TOKEN = getenv("BOT_TOKEN")

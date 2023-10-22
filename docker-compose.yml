@@ -6,8 +6,8 @@ services:
     build:
       dockerfile: fastapi.dockerfile
     volumes:
-      - ./:/src
-      - ./static:/static:mode=755
+      - ./:/src:rw
+      - ./static:/static:rw
     env_file:
       - .env
     ports:
