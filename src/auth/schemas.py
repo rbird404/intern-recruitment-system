@@ -1,6 +1,8 @@
 from pydantic import Field, ConfigDict
 from pydantic import BaseModel
 
+from src.auth.utils import UserRoleType
+
 
 class AuthUser(BaseModel):
     username: str
@@ -14,9 +16,10 @@ class UserCreate(AuthUser):
 
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-
     id: int
-    username: str
+    first_name: str | None
+    last_name: str | None
+    role: UserRoleType
 
 
 class TokenPair(BaseModel):

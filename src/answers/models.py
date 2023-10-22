@@ -3,7 +3,7 @@ from sqlalchemy import (
     ForeignKey,
     Enum,
     Integer,
-    Float
+    Float, String
 )
 
 from src.answers.utils import AnswerType
@@ -17,4 +17,5 @@ class Answer(Base):
     test_id = mapped_column(Integer, ForeignKey("tests.id", ondelete="CASCADE"))
     grade_request_id = mapped_column(Integer, ForeignKey("grade_requests.id", ondelete="CASCADE"))
     question_id = mapped_column(Integer, ForeignKey("questions.id", ondelete="CASCADE"))
-    type = mapped_column(Enum(AnswerType), nullable=False)
+    content = mapped_column(String, nullable=True)
+    language = mapped_column(String, nullable=True)

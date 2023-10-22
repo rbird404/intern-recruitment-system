@@ -77,4 +77,8 @@ async def get_current_user(
     return await get_user_from_token(session, token)
 
 
+async def get_users(session: AsyncDbSession):
+    return await session.scalars(select(User))
+
+
 CurrentUser = Annotated[User, Depends(get_current_user)]

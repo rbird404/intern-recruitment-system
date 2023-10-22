@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, status
 
 from src.auth import service, tokens
@@ -8,6 +10,11 @@ from src.auth.service import CurrentUser
 from src.database import AsyncDbSession
 
 router = APIRouter()
+
+
+@router.get("/users", response_model=List[UserRead])
+async def get_users_list(session: AsyncDbSession):
+    return await service.get_users(session)
 
 
 @router.post("/users", status_code=status.HTTP_201_CREATED, response_model=UserRead)

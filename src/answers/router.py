@@ -11,13 +11,17 @@ from src.exceptions import BadRequest
 router = APIRouter()
 
 
-@router.post("", response_model=AnswerRead)
-async def create_answer(
-        session: AsyncDbSession, answer_in: AnswerCreate, user: auth_service.CurrentUser
+@router.post("", response_model=List[AnswerRead])
+async def create_answers(
+        session: AsyncDbSession, answers_in: List[AnswerCreate], user: auth_service.CurrentUser
 ):
-    answer = await service.create_answer(session, answer_in, user.id)
+    answers = []
+    for answer in answers_in:
+        answers.append(
+            await service.create_answer(session, answer)
+        )
     await session.commit()
-    return answer
+    return answers
 
 
 @router.get("", response_model=List[AnswerRead])
