@@ -20,7 +20,7 @@ jobs:
         pip install pre-commit
         pip install poetry
         poetry install
-        pip install pytest[asyncio]
+        pip install pytest-asyncio
     - name: Analysing the code with pre-commit and run tests
       run: |
         pre-commit install
