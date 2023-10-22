@@ -47,3 +47,9 @@ class GradeRequestReadFull(BaseModel):
     user: UserRead
     tech_lead: UserRead | None
     hr: UserRead | None
+
+
+class Result(BaseModel):
+    test_result: int | None
+    grade_request_id: int
+    test_id: int

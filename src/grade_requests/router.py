@@ -2,6 +2,7 @@ import logging
 from typing import List
 
 from fastapi import APIRouter, UploadFile
+from sqlalchemy import select
 
 from src.auth import service
 from src.auth.service import CurrentUser
@@ -9,8 +10,9 @@ from src.database import AsyncDbSession
 from src.exceptions import BadRequest
 
 from src.grade_requests import service
+from src.grade_requests.models import TestResult
 from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead, GradeRequestCreate, \
-    GradeRequestReadFull
+    GradeRequestReadFull, Result
 
 router = APIRouter()
 
@@ -73,3 +75,11 @@ async def get_grades(session: AsyncDbSession, user: CurrentUser):
     if user.role == "Candidate":
         candidate_id = user.id
     return await service.get_grade_requests(session, candidate_id)
+
+
+@router.get("/result", response_model=List[Result])
+async def get_test_result(session: AsyncDbSession):
+    tests = await session.scalars(
+        select(TestResult)
+    )
+    return tests
