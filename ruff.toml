@@ -1,0 +1,9 @@
+line-length = 88
+exclude = [
+    "__init__.py",
+    "alembic",
+    ".venv",
+    "gunicorn",
+    "postman",
+    "static",
+]
