@@ -20,7 +20,6 @@ async def user_create_grade_request(
         session: AsyncDbSession,
         user: CurrentUser,
         grade_request_in: GradeRequestCreate
-
 ):
     request = await service.create_user_grade_request(session, user.id, grade_request_in)
     await session.commit()
@@ -69,5 +68,8 @@ async def load_file(file_in: UploadFile):
 
 
 @router.get("", response_model=List[GradeRequestReadFull])
-async def get_grades(session: AsyncDbSession):
-    return await service.get_grade_requests(session)
+async def get_grades(session: AsyncDbSession, user: CurrentUser):
+    candidate_id = None
+    if user.role == "Candidate":
+        candidate_id = user.id
+    return await service.get_grade_requests(session, candidate_id)

@@ -10,7 +10,10 @@ class AuthUser(BaseModel):
 
 
 class UserCreate(AuthUser):
+    first_name: str | None
+    last_name: str | None
     email: str
+    role: UserRoleType | None = None
     model_config = ConfigDict(from_attributes=True)
 
 

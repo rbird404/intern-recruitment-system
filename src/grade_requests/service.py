@@ -55,11 +55,11 @@ async def change_status(session: AsyncDbSession, grade_request_id, status: Grade
     return request
 
 
-async def get_grade_requests(session: AsyncDbSession):
-    requests = await session.scalars(
-        select(GradeRequest)
-    )
-    return requests
+async def get_grade_requests(session: AsyncDbSession, candidate_id: int = None):
+    stmt = select(GradeRequest)
+    if candidate_id:
+        stmt = stmt.where(GradeRequest.user_id == candidate_id)
+    return await session.scalars(stmt)
 
 
 async def load_file(file_in) -> str:
