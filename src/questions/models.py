@@ -1,4 +1,6 @@
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy import (
     String,
     ForeignKey,
@@ -8,9 +10,6 @@ from sqlalchemy import (
 
 from src.database import Base
 from src.questions.enums import QuestionType
-from sqlalchemy.orm import relationship
-
-from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 class TestCase(Base):
