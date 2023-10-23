@@ -1,7 +1,9 @@
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
+
 from src.questions.models import Text, TestCase, Code, Question
-from src.questions.schemas import TextCreate, TestCaseCreate, CodeCreate, QuestionCreate, QuestionRead
+from src.questions.schemas import TextCreate, TestCaseCreate, CodeCreate, QuestionCreate
 
 
 async def create_text(session: AsyncSession, question_id: int, text_in: TextCreate):
@@ -42,26 +44,22 @@ async def create_question(session: AsyncSession, question_in: QuestionCreate):
         await create_text(session, question.id, question_in.content)
     elif type_ == "code":
         await create_code(session, question.id, question_in.content)
-    await session.refresh(question)
+
     return question
 
 
-async def remove_question(session: AsyncSession, id_: int) -> Question:
+async def get_question_by_id(session: AsyncSession, id_: int) -> Question:
     question = await session.scalar(
-        delete(Question).where(Question.id == id_)
-        .returning(Question)
+        select(Question).options(
+            joinedload(Question.text),
+            joinedload(Question.code)
+        )
+        .where(Question.id == id_)
     )
     return question
 
 
-async def get_question(session: AsyncSession, id_: int) -> Question:
-    question = await session.scalar(
-        select(Question).where(Question.id == id_)
-    )
-    return question
-
-
-async def get_questions(session: AsyncSession):
+async def get_questions_list(session: AsyncSession):
     questions = await session.scalars(
         select(Question)
     )

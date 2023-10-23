@@ -16,35 +16,53 @@ from src.specializations.models import Specialization
 
 class GradeRequest(Base):
     __tablename__ = "grade_requests"
-    user_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    hr_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    tech_lead_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    specialization_id = mapped_column(Integer, ForeignKey("specializations.id", ondelete="SET NULL"), nullable=True)
+
+    id = mapped_column(Integer, primary_key=True, autoincrement="auto")
     status = mapped_column(Enum(GradeRequestType), default=GradeRequestType.entering)
     type = mapped_column(Enum(GradeUserType), default=GradeUserType.intern)
     resume = mapped_column(String, nullable=True)
-    tests: Mapped[List[Test]] = relationship(lazy='selectin', secondary="grade_request_tests")
-    user: Mapped[User] = relationship(lazy='selectin', foreign_keys=[user_id])
-    hr: Mapped[User] = relationship(lazy="selectin", foreign_keys=[hr_id])
-    tech_lead: Mapped[User] = relationship(lazy="selectin", foreign_keys=[tech_lead_id])
-    specialization: Mapped[Specialization] = relationship(lazy="selectin")
+
+    # relationships
+    tests: Mapped[List[Test]] = relationship(secondary="grade_request_tests")
+
+    specialization_id = mapped_column(Integer, ForeignKey("specializations.id", ondelete="SET NULL"), nullable=True)
+    specialization: Mapped[Specialization] = relationship()
+
+    user_id = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    user: Mapped[User] = relationship(foreign_keys=[user_id])
+
+    hr_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    hr: Mapped[User] = relationship(foreign_keys=[hr_id])
+
+    tech_lead_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    tech_lead: Mapped[User] = relationship(foreign_keys=[tech_lead_id])
 
 
 class GradeRequestTests(Base):
     __tablename__ = "grade_request_tests"
 
-    grade_request_id = mapped_column(Integer, ForeignKey("grade_requests.id", ondelete="SET NULL"), nullable=True)
-    test_id = mapped_column(Integer, ForeignKey("tests.id", ondelete="SET NULL"), nullable=True)
+    grade_request_id = mapped_column(
+        Integer,
+        ForeignKey("grade_requests.id", ondelete="CASCADE"),
+        nullable=True,
+        primary_key=True
+    )
+    test_id = mapped_column(
+        Integer,
+        ForeignKey("tests.id", ondelete="CASCADE"),
+        nullable=True,
+        primary_key=True
+    )
 
 
 class TestResult(Base):
-    __tablename__ = "test_result"
-    id = None
-    test_result = mapped_column(Integer)
+    __tablename__ = "test_results"
+
     grade_request_id = mapped_column(Integer, primary_key=True)
     test_id = mapped_column(Integer, primary_key=True)
+    result = mapped_column(Integer)
 
-# CODE test_result
-# create view test_result as select sum(foo.answer_result) / sum(foo.question_point) * 100 as test_result, foo.grade_request_id, foo.test_id from (select tq.test_id, tq.question_id, a.grade_request_id, max(point) as question_point, max(a.coefficient) * max(tq.point) as answer_result from test_questions tq join answers a on tq.test_id = a.test_id and tq.question_id = a.question_id
+
+# SQL test_result
+# create view test_results as select sum(foo.answer_result) / sum(foo.question_point) * 100 as result, foo.grade_request_id, foo.test_id from (select tq.test_id, tq.question_id, a.grade_request_id, max(point) as question_point, max(a.coefficient) * max(tq.point) as answer_result from test_questions tq join answers a on tq.test_id = a.test_id and tq.question_id = a.question_id
 # group by tq.test_id, tq.question_id, a.grade_request_id) as foo group by foo.grade_request_id, foo.test_id
-

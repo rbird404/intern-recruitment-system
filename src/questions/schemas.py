@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from src.questions.utils import QuestionType
+from src.questions.enums import QuestionType
 
 
 class TestCaseCreate(BaseModel):
@@ -15,14 +15,6 @@ class CodeCreate(BaseModel):
 
 class TextCreate(BaseModel):
     content: str
-
-
-class QuestionCreate(BaseModel):
-    title: str
-    description: str | None = None
-    level: int
-    type: QuestionType
-    content: CodeCreate | TextCreate
 
 
 class TestCaseRead(BaseModel):
@@ -46,11 +38,22 @@ class TextRead(BaseModel):
     content: str
 
 
-class QuestionRead(BaseModel):
+class QuestionBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    id: int
     title: str
     description: str | None = None
     level: int
     type: QuestionType
+
+
+class QuestionReadDetail(QuestionBase):
+    id: int
     content: CodeRead | TextRead | None
+
+
+class QuestionReadList(QuestionBase):
+    id: int
+
+
+class QuestionCreate(QuestionBase):
+    content: CodeCreate | TextCreate

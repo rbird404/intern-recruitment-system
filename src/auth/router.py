@@ -23,6 +23,7 @@ async def register_user(
         user_in: UserCreate = Depends(valid_user_create),
 ):
     user = await service.create_user(session, user_in)
+    await session.commit()
     return UserRead.model_validate(user)
 
 

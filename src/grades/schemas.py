@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from src.questions.schemas import QuestionCreate, QuestionRead
+from src.questions.schemas import QuestionCreate, QuestionReadDetail
 
 
 class QuestionCreateOrUpdate(QuestionCreate):
@@ -20,7 +20,7 @@ class TestCreate(BaseModel):
 class TestQuestionRead(BaseModel):
     id: int
     point: int
-    question: QuestionRead
+    question: QuestionReadDetail
 
 
 class TestRead(BaseModel):

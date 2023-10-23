@@ -13,16 +13,23 @@ from src.questions.models import Question
 
 class TestQuestion(Base):
     __tablename__ = "test_questions"
+
+    id = mapped_column(Integer, primary_key=True, autoincrement="auto")
+    point = mapped_column(Integer, nullable=False)
+
+    # relationships
     test_id = mapped_column(Integer, ForeignKey("tests.id", ondelete="CASCADE"), primary_key=True)
     question_id = mapped_column(Integer, ForeignKey("questions.id", ondelete="CASCADE"), primary_key=True)
-    point = mapped_column(Integer, nullable=False)
-    question: Mapped[Question] = relationship(lazy="selectin")
+    question: Mapped[Question] = relationship()
 
 
 class Test(Base):
     __tablename__ = "tests"
 
+    id = mapped_column(Integer, primary_key=True, autoincrement="auto")
     title = mapped_column(String, nullable=False)
     description = mapped_column(String)
+
+    # relationships
     creator_id = mapped_column(Integer, ForeignKey("users.id"))
-    questions: Mapped[List[TestQuestion]] = relationship(lazy="selectin")
+    questions: Mapped[List[TestQuestion]] = relationship()

@@ -22,7 +22,8 @@ class UserRead(BaseModel):
     id: int
     first_name: str | None
     last_name: str | None
-    role: UserRoleType
+    role: str | None
+
 
 
 class TokenPair(BaseModel):
