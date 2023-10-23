@@ -1,8 +1,5 @@
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import (
-    String,
-    Integer
-)
+from sqlalchemy import String, Integer
 
 from src.database import Base
 

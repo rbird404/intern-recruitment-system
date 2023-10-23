@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, select
-from src.specializations.schemas import SpecializationCreate
+from src.specializations.schemas import SpecializationBase
 from .models import Specialization
 
 
-async def create_specialization(session: AsyncSession, specialization_id: SpecializationCreate) -> Specialization:
+async def create_specialization(session: AsyncSession, specialization_id: SpecializationBase) -> Specialization:
     specialization = Specialization(
         **specialization_id.model_dump()
     )
@@ -12,7 +12,7 @@ async def create_specialization(session: AsyncSession, specialization_id: Specia
     return specialization
 
 
-async def get_specializations(session: AsyncSession):
+async def get_specializations_list(session: AsyncSession):
     specializations = await session.scalars(
         select(Specialization)
     )

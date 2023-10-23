@@ -1,15 +1,15 @@
 from pydantic import BaseModel, ConfigDict
 
-from src.answers.utils import AnswerType
 
-
-class SpecializationCreate(BaseModel):
+class SpecializationBase(BaseModel):
     name: str
     description: str | None = None
 
 
-class SpecializationRead(BaseModel):
+class SpecializationCreate(SpecializationBase):
+    ...
+
+
+class SpecializationRead(SpecializationBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    name: str
-    description: str | None = None
