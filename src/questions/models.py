@@ -32,7 +32,7 @@ class Code(Base):
 
     # relationships
     question_id = mapped_column(Integer, ForeignKey("questions.id", ondelete="CASCADE"))
-    test_cases = relationship(TestCase, lazy='selectin', uselist=True)
+    test_cases = relationship(TestCase, lazy='joined', uselist=True)
 
 
 class Text(Base):
@@ -55,8 +55,8 @@ class Question(Base):
     type = mapped_column(Enum(QuestionType), nullable=False)
 
     # relationships
-    code = relationship(Code, uselist=False)
-    text = relationship(Text, uselist=False)
+    code = relationship(Code, lazy="joined", uselist=False)
+    text = relationship(Text, lazy="joined", uselist=False)
 
     @property
     def content(self) -> InstrumentedAttribute:

@@ -36,5 +36,5 @@ if settings.ENVIRONMENT.is_deployed:
 if not settings.ENVIRONMENT.is_debug:
     app_configs["openapi_url"] = None  # hide docs
 
-STATIC_DIR = Path(getenv("STATIC_DIR", default="static"))
+STATIC_DIR = Path(__file__).parent.parent / "static"
 CODE_EXECUTOR_URL = getenv("CODE_EXECUTOR_URL")

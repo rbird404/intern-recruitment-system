@@ -9,7 +9,7 @@ from sqlalchemy import (
 
 from src.auth.models import User
 from src.database import Base
-from src.grade_requests.utils import GradeRequestType, GradeUserType
+from src.grade_requests.enums import GradeRequestType, GradeUserType
 from src.grades.models import Test
 from src.specializations.models import Specialization
 
@@ -26,16 +26,16 @@ class GradeRequest(Base):
     tests: Mapped[List[Test]] = relationship(secondary="grade_request_tests")
 
     specialization_id = mapped_column(Integer, ForeignKey("specializations.id", ondelete="SET NULL"), nullable=True)
-    specialization: Mapped[Specialization] = relationship()
+    specialization: Mapped[Specialization] = relationship(lazy="joined")
 
     user_id = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
-    user: Mapped[User] = relationship(foreign_keys=[user_id])
+    user: Mapped[User] = relationship(foreign_keys=[user_id], lazy="joined")
 
     hr_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    hr: Mapped[User] = relationship(foreign_keys=[hr_id])
+    hr: Mapped[User] = relationship(foreign_keys=[hr_id], lazy="joined")
 
     tech_lead_id = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    tech_lead: Mapped[User] = relationship(foreign_keys=[tech_lead_id])
+    tech_lead: Mapped[User] = relationship(foreign_keys=[tech_lead_id], lazy="joined")
 
 
 class GradeRequestTests(Base):
@@ -61,7 +61,6 @@ class TestResult(Base):
     grade_request_id = mapped_column(Integer, primary_key=True)
     test_id = mapped_column(Integer, primary_key=True)
     result = mapped_column(Integer)
-
 
 # SQL test_result
 # create view test_results as select sum(foo.answer_result) / sum(foo.question_point) * 100 as result, foo.grade_request_id, foo.test_id from (select tq.test_id, tq.question_id, a.grade_request_id, max(point) as question_point, max(a.coefficient) * max(tq.point) as answer_result from test_questions tq join answers a on tq.test_id = a.test_id and tq.question_id = a.question_id

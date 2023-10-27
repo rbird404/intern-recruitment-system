@@ -1,7 +1,7 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 from src.auth.schemas import UserRead
-from src.grade_requests.utils import GradeRequestType, GradeUserType
+from src.grade_requests.enums import GradeRequestType, GradeUserType
 from src.specializations.schemas import SpecializationRead
 
 

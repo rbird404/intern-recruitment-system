@@ -1,9 +1,9 @@
-from sqlalchemy import select, delete
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import noload
 
 from .models import Test, TestQuestion
 from .schemas import TestCreate
-from src.questions import service as question_service
 
 
 async def create_test(session: AsyncSession, test_in: TestCreate):
@@ -11,27 +11,18 @@ async def create_test(session: AsyncSession, test_in: TestCreate):
     session.add(test)
     await session.flush()
 
-    for question_test in test_in.questions:
-        question_in = question_test.question
-        point = question_test.point
-        if question_in.id is None:
-            question = await question_service.create_question(session, question_in)
-            session.add(question)
-            await session.flush()
-        else:
-            question = await question_service.get_question(session, question_in.id)
-            if question is None:
-                continue
-
+    for question_in in test_in.questions:
         session.add(
-            TestQuestion(test_id=test.id, question_id=question.id, point=point)
+            TestQuestion(
+                test_id=test.id,
+                question_id=question_in.question_id,
+                point=question_in.point
+            )
         )
-
-    await session.refresh(test)
     return test
 
 
-async def get_test(session: AsyncSession, id_: int):
+async def get_test_by_id(session: AsyncSession, id_: int):
     test = await session.scalar(
         select(Test).where(Test.id == id_)
     )
@@ -39,15 +30,9 @@ async def get_test(session: AsyncSession, id_: int):
 
 
 async def get_tests(session: AsyncSession):
-    test = await session.scalars(
-        select(Test)
+    tests = await session.scalars(
+        select(Test).options(
+            noload(Test.questions)
+        )
     )
-    return test
-
-
-async def delete_test(session: AsyncSession, id_: int):
-    test = await session.scalar(
-        delete(Test).where(Test.id == id_)
-        .returning(Test)
-    )
-    return test
+    return tests

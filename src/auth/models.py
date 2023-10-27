@@ -34,7 +34,7 @@ class User(Base):
 
     # relationships
     role_id = mapped_column(ForeignKey("user_roles.id", ondelete="SET NULL"), nullable=True)
-    role = relationship(UserRole)
+    role = relationship(UserRole, lazy="joined")
 
 
 class WhitelistedToken(Base):

@@ -7,7 +7,7 @@ services:
       dockerfile: fastapi.dockerfile
     volumes:
       - ./:/src
-      - ./static:/static:mode=755
+      - static:/src/static:mode=777
     env_file:
       - .env
     ports:
@@ -46,6 +46,7 @@ services:
 
 volumes:
   pg_data:
+  static:
 
 networks:
   my-ms:

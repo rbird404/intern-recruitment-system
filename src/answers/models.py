@@ -1,12 +1,11 @@
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import (
     ForeignKey,
-    Enum,
     Integer,
-    Float, String
+    Float,
+    String
 )
 
-from src.answers.utils import AnswerType
 from src.database import Base
 
 

@@ -1,4 +1,5 @@
 import uuid
+import os
 
 import aiofiles
 from fastapi import UploadFile
@@ -23,8 +24,6 @@ async def create_user_grade_request(
         **grade_request_in.model_dump()
     )
     session.add(request)
-    await session.flush()
-    await session.refresh(request)
     return request
 
 
@@ -62,22 +61,23 @@ async def get_grade_requests(session: AsyncDbSession, candidate_id: int = None):
     return await session.scalars(stmt)
 
 
-async def load_file(file_in) -> str:
+async def load_file(file_in: UploadFile) -> str:
     chunk_size = 1024 * 1024 * 50
+    file_name = f"{uuid.uuid4().hex}.pdf"
     async with aiofiles.open(
-            str(STATIC_DIR / f"{uuid.uuid4()}.pdf"),
+            str(STATIC_DIR / file_name),
             "wb"
     ) as file:
         while chunk := await file_in.read(chunk_size):
             await file.write(chunk)
-    return file.name
+    return file_name
 
 
 async def add_user(session: AsyncSession, request_id: int, user_id: int, role: str):
     data = dict()
     if role == "tech_lead":
         data["tech_lead_id"] = user_id
-    else:
+    elif role == "hr":
         data["hr_id"] = user_id
 
     request = await session.scalar(

@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import noload
 
 from src.questions.models import Text, TestCase, Code, Question
 from src.questions.schemas import TextCreate, TestCaseCreate, CodeCreate, QuestionCreate
@@ -50,17 +50,16 @@ async def create_question(session: AsyncSession, question_in: QuestionCreate):
 
 async def get_question_by_id(session: AsyncSession, id_: int) -> Question:
     question = await session.scalar(
-        select(Question).options(
-            joinedload(Question.text),
-            joinedload(Question.code)
-        )
-        .where(Question.id == id_)
+        select(Question).where(Question.id == id_)
     )
     return question
 
 
 async def get_questions_list(session: AsyncSession):
     questions = await session.scalars(
-        select(Question)
+        select(Question).options(
+            noload(Question.text),
+            noload(Question.code)
+        )
     )
     return questions

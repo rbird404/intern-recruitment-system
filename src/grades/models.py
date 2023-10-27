@@ -20,7 +20,7 @@ class TestQuestion(Base):
     # relationships
     test_id = mapped_column(Integer, ForeignKey("tests.id", ondelete="CASCADE"), primary_key=True)
     question_id = mapped_column(Integer, ForeignKey("questions.id", ondelete="CASCADE"), primary_key=True)
-    question: Mapped[Question] = relationship()
+    question: Mapped[Question] = relationship(lazy="joined")
 
 
 class Test(Base):
@@ -32,4 +32,4 @@ class Test(Base):
 
     # relationships
     creator_id = mapped_column(Integer, ForeignKey("users.id"))
-    questions: Mapped[List[TestQuestion]] = relationship()
+    questions: Mapped[List[TestQuestion]] = relationship(lazy="joined")

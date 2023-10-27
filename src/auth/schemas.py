@@ -25,7 +25,6 @@ class UserRead(BaseModel):
     role: str | None
 
 
-
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str

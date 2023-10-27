@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from src.answers.schemas import AnswerCreate
 
 from src.answers.models import Answer
@@ -17,13 +17,13 @@ async def create_answer(session: AsyncSession, answer_in: AnswerCreate) -> Answe
 
     coefficient = 0
 
-    if question.type == "text":
-        if question.text.content == answer_in.content:
+    if text := question.text:
+        if text.content == answer_in.content:
             coefficient = 1
-    else:
-        code_id = question.code.id
+
+    elif code := question.code:
         test_cases_result = []
-        for test_case in await get_test_cases(session, code_id):
+        for test_case in await get_test_cases(session, code.id):
             result = await run_test_case(
                 test_case,
                 language=answer_in.language,
@@ -54,13 +54,5 @@ async def get_answers(session: AsyncSession):
 async def get_answer(session: AsyncSession, id_: int) -> Answer:
     answer = await session.scalar(
         select(Answer).where(Answer.id == id_)
-    )
-    return answer
-
-
-async def remove_answer(session: AsyncSession, id_: int) -> Answer:
-    answer = await session.scalar(
-        delete(Answer).where(Answer.id == id_)
-        .returning(Answer)
     )
     return answer
