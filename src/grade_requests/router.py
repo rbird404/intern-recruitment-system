@@ -1,6 +1,4 @@
-import logging
 from typing import List
-
 from fastapi import APIRouter, UploadFile
 from sqlalchemy import select
 
@@ -8,12 +6,12 @@ from src.auth import service
 from src.auth.service import CurrentUser
 from src.database import AsyncDbSession
 from src.exceptions import BadRequest
-
 from src.grade_requests import service
 from src.grade_requests.models import TestResult
-from src.grade_requests.schemas import GradeRequestStatusUpdate, TestList, GradeRequestRead, GradeRequestCreate, \
-    GradeRequestReadFull, Result
-
+from src.grade_requests.schemas import (
+    GradeRequestStatusUpdate, TestList, GradeRequestRead,
+    GradeRequestCreate, GradeRequestReadFull, Result
+)
 router = APIRouter()
 
 

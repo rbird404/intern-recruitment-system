@@ -2,10 +2,10 @@ import uuid
 from jose import jwt, JWTError
 from datetime import datetime
 from fastapi.security import HTTPBearer
+from pydantic import BaseModel
 
 from src.auth.config import auth_config
 from src.auth.exceptions import InvalidToken
-from pydantic import BaseModel
 
 bearer_token = HTTPBearer()
 

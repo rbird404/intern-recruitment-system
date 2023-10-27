@@ -1,7 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from src.answers.schemas import AnswerCreate
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.answers.schemas import AnswerCreate
 from src.answers.models import Answer
 from src.code_execute.service import get_test_cases, run_test_case
 from src.exceptions import BadRequest

@@ -1,5 +1,4 @@
 from typing import Annotated, Type
-
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy import select

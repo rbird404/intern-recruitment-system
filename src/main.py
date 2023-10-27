@@ -1,11 +1,7 @@
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator
-
-import redis.asyncio as aioredis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from src import redis
 from src.auth.router import router as auth_router
 from src.questions.router import router as question_router
 from src.grades.router import router as grade_router
@@ -14,24 +10,7 @@ from src.grade_requests.router import router as grades_request_router
 from src.specializations.router import router as specialization_router
 from src.code_execute.router import router as code_execute_router
 from src.config import app_configs, settings, STATIC_DIR
-from fastapi.staticfiles import StaticFiles
 
-
-@asynccontextmanager
-async def lifespan(_application: FastAPI) -> AsyncGenerator:
-    redis_url = str(settings.REDIS_URL)
-
-    pool = aioredis.ConnectionPool.from_url(
-        redis_url, max_connections=10, decode_responses=True
-    )
-
-    redis.redis_client = aioredis.Redis(connection_pool=pool)
-    yield
-
-    if settings.ENVIRONMENT.is_testing:
-        return
-    # Shutdown
-    await pool.disconnect()
 
 app = FastAPI(**app_configs)
 

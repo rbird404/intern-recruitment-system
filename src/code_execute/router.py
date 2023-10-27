@@ -3,9 +3,7 @@ from fastapi import APIRouter
 
 from src.auth import service
 from src.code_execute.schemas import UserCode, CodeUserResult
-
 from src.database import AsyncDbSession
-
 from src.grade_requests import service
 from src.code_execute import service
 
